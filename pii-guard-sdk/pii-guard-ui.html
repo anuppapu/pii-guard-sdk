@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PII Guard — Data Protection Demo</title>
+<style>
+:root{color-scheme:light;--ink:#172033;--muted:#667085;--line:#e4e7ec;--blue:#3157d5;--green:#16794b;--green-bg:#eaf7f0;--red:#b42318;--red-bg:#fff0ee;--amber-bg:#fff7e5}
+*{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.page{width:min(1100px,calc(100% - 36px));margin:42px auto}header{margin-bottom:24px}.eyebrow{color:var(--blue);font-size:12px;font-weight:750;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:7px 0 6px;font-size:clamp(27px,4vw,36px);letter-spacing:-.035em}.subtitle,.help{color:var(--muted)}.subtitle{margin:0}
+.layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:20px;align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 5px 20px #10182809}
+.panel h2{margin:0 0 5px;font-size:18px}.help{margin:0 0 17px;font-size:13px}
+label{display:block;margin-bottom:8px;font-weight:650;font-size:13px}
+textarea{display:block;width:100%;min-height:270px;resize:vertical;padding:14px;border:1px solid #cfd5df;border-radius:10px;outline:none;color:var(--ink);font:13px/1.6 ui-monospace,monospace}
+textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #3157d51f}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}button{border:0;border-radius:9px;padding:10px 15px;cursor:pointer;font:700 13px inherit}
+button:disabled{opacity:.55;cursor:wait}.primary{color:white;background:var(--blue)}.secondary{color:#344054;background:#eef1f6}
+.privacy-note{display:flex;gap:9px;margin-top:15px;padding:11px 12px;border-radius:9px;background:var(--amber-bg);color:#704d00;font-size:12px}
+.status{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:15px 0;padding:13px 14px;border-radius:10px;font-weight:700}
+.status.neutral{color:var(--muted);background:#f2f4f7}.status.blocked{color:var(--red);background:var(--red-bg)}.status.allowed{color:var(--green);background:var(--green-bg)}
+.status small{display:block;font-size:11px;font-weight:550;opacity:.8}.status strong{font-size:14px}
+.result-label{display:flex;align-items:center;justify-content:space-between;margin:18px 0 8px;font-size:13px;font-weight:700}
+pre{min-height:120px;max-height:300px;overflow:auto;margin:0;padding:13px;border:1px solid var(--line);border-radius:10px;background:#fafbfc;color:#273247;white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.65 ui-monospace,monospace}
+.empty{color:#98a2b3}.findings{display:grid;gap:8px;margin-top:9px}
+.finding{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px 11px;border:1px solid var(--line);border-radius:9px;font-size:12px}
+.finding-name{font-weight:700}.tag{padding:3px 7px;border-radius:20px;background:#f2f4f7;color:#475467;font-size:10px;font-weight:750;text-transform:uppercase}
+.tag.critical{color:var(--red);background:var(--red-bg)}.tag.high{color:#8a4b08;background:#fff3df}
+.error{display:none;margin-top:12px;color:var(--red);font-size:12px}footer{margin-top:18px;color:var(--muted);font-size:11px;text-align:center}
+@media(max-width:780px){.page{margin:25px auto}.layout{grid-template-columns:1fr}.panel{padding:18px}}
+</style>
+</head>
+<body>
+<main class="page">
+<header><div class="eyebrow">Privacy &amp; data protection</div><h1>PII Guard</h1><p class="subtitle">Inspect sensitive text, apply your PII policy, and review the sanitized result.</p></header>
+<div class="layout">
+<section class="panel">
+<h2>Input data</h2><p class="help">Paste sample text or CRM data that you want to inspect.</p>
+<label for="inputData">Text containing sensitive information</label>
+<textarea id="inputData" spellcheck="false" placeholder="Enter text to scan..."></textarea>
+<div class="actions">
+<button class="primary" id="scanButton" type="button">Scan and protect data</button>
+<button class="secondary" id="sampleButton" type="button">Load sample</button>
+<button class="secondary" id="clearButton" type="button">Clear</button>
+</div>
+<div class="privacy-note"><span aria-hidden="true">⚠</span><span>Demo UI: use synthetic data only. The browser sends the text to your configured backend API for processing.</span></div>
+<div class="error" id="errorMessage" role="alert"></div>
+</section>
+<section class="panel" aria-live="polite">
+<h2>Protection results</h2><p class="help">The result returned by your PII Guard backend appears here.</p>
+<div class="status neutral" id="statusBox"><div><strong id="statusTitle">Waiting for scan</strong><small id="statusMessage">Submit text to see the protection result.</small></div><span id="statusIcon" aria-hidden="true">●</span></div>
+<div class="result-label"><span>Sanitized data</span><button class="secondary" id="copyButton" type="button">Copy result</button></div>
+<pre id="outputData" class="empty">No result yet.</pre>
+<div class="result-label"><span>Detected PII findings</span></div>
+<div id="findings" class="findings"><span class="empty">Findings will appear after scanning.</span></div>
+</section>
+</div>
+<footer>PII Guard SDK demo · Detection and sanitization are performed by the server-side policy.</footer>
+</main>
+<script>
+const API_URL="http://127.0.0.1:8000/api/process"; // Update this to your Python backend endpoint.
+const input=document.getElementById("inputData"),scanButton=document.getElementById("scanButton");
+const output=document.getElementById("outputData"),findingsContainer=document.getElementById("findings");
+const statusBox=document.getElementById("statusBox"),errorMessage=document.getElementById("errorMessage");
+const sampleText=["Employee: John Smith","Email: john.smith@example.com","Phone: +1 415-555-0198","SSN: 123-45-6789","Credit Card: 4532015112830366","Employee ID: EMP123456","Salary: $125,000","Password: DemoPassword123"].join("\n");
+function showStatus(blocked,message){
+ statusBox.className="status "+(blocked?"blocked":"allowed");
+ document.getElementById("statusTitle").textContent=blocked?"Data blocked":"Data accepted";
+ document.getElementById("statusMessage").textContent=message;
+ document.getElementById("statusIcon").textContent=blocked?"!":"✓";
+}
+function renderFindings(items){
+ findingsContainer.replaceChildren();
+ if(!Array.isArray(items)||items.length===0){
+  const empty=document.createElement("span");empty.className="empty";empty.textContent="No PII findings returned.";findingsContainer.appendChild(empty);return;
+ }
+ items.forEach(item=>{
+  const row=document.createElement("div");row.className="finding";
+  const name=document.createElement("span");name.className="finding-name";name.textContent=item.name||item.category||"PII finding";
+  const severity=document.createElement("span");severity.className="tag "+String(item.severity||"").toLowerCase();severity.textContent=item.severity||"unknown";
+  const action=document.createElement("span");action.className="tag";action.textContent=item.strategy||item.action||"processed";
+  row.append(name,severity,action);findingsContainer.appendChild(row);
+ });
+}
+scanButton.addEventListener("click",async()=>{
+ const text=input.value.trim();errorMessage.style.display="none";
+ if(!text){errorMessage.textContent="Enter some text before scanning.";errorMessage.style.display="block";return;}
+ scanButton.disabled=true;scanButton.textContent="Scanning...";output.textContent="Processing...";output.classList.remove("empty");
+ try{
+  const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});
+  if(!response.ok)throw new Error("Backend returned HTTP "+response.status);
+  const result=await response.json();
+  if(typeof result.blocked!=="boolean"||typeof result.data!=="string")throw new Error("Unexpected API response. Expected blocked and data fields.");
+  output.textContent=result.data;showStatus(result.blocked,result.message||"Processing completed.");renderFindings(result.findings||[]);
+ }catch(error){
+  output.textContent="No processed result available.";output.classList.add("empty");
+  errorMessage.textContent="Could not process the request. Check that your Python backend is running and "+API_URL+" is available. "+error.message;
+  errorMessage.style.display="block";statusBox.className="status neutral";
+  document.getElementById("statusTitle").textContent="Scan unavailable";
+  document.getElementById("statusMessage").textContent="Backend connection failed.";renderFindings([]);
+ }finally{scanButton.disabled=false;scanButton.textContent="Scan and protect data";}
+});
+document.getElementById("sampleButton").addEventListener("click",()=>{input.value=sampleText;errorMessage.style.display="none";});
+document.getElementById("clearButton").addEventListener("click",()=>{
+ input.value="";output.textContent="No result yet.";output.classList.add("empty");findingsContainer.replaceChildren();
+ const empty=document.createElement("span");empty.className="empty";empty.textContent="Findings will appear after scanning.";findingsContainer.appendChild(empty);
+ statusBox.className="status neutral";document.getElementById("statusTitle").textContent="Waiting for scan";
+ document.getElementById("statusMessage").textContent="Submit text to see the protection result.";
+ document.getElementById("statusIcon").textContent="●";errorMessage.style.display="none";
+});
+document.getElementById("copyButton").addEventListener("click",async()=>{
+ if(output.classList.contains("empty"))return;
+ try{await navigator.clipboard.writeText(output.textContent);const button=document.getElementById("copyButton");button.textContent="Copied";setTimeout(()=>button.textContent="Copy result",1400);}
+ catch{errorMessage.textContent="Clipboard access was unavailable.";errorMessage.style.display="block";}
+});
+</script>
+</body>
+</html>

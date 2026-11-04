@@ -1,0 +1,4 @@
+# Optional dependencies for the FastAPI demo backend.
+# The PII Guard SDK core itself uses only the Python standard library.
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.27,<1.0

@@ -1,0 +1,442 @@
+{
+  "version": 1,
+  "sensitive_fields": {
+    "ssn": {
+      "name": "ssn_field",
+      "category": "government_id",
+      "severity": "critical",
+      "strategy": "redact"
+    },
+    "social_security_number": {
+      "name": "ssn_field",
+      "category": "government_id",
+      "severity": "critical",
+      "strategy": "redact"
+    },
+    "national_id": {
+      "name": "national_id_field",
+      "category": "government_id",
+      "severity": "critical",
+      "strategy": "redact"
+    },
+    "tax_id": {
+      "name": "tax_id_field",
+      "category": "tax_identifier",
+      "severity": "critical",
+      "strategy": "redact"
+    },
+    "date_of_birth": {
+      "name": "dob_field",
+      "category": "identity",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "dob": {
+      "name": "dob_field",
+      "category": "identity",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "home_address": {
+      "name": "home_address_field",
+      "category": "location",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "residential_address": {
+      "name": "home_address_field",
+      "category": "location",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "personal_email": {
+      "name": "personal_email_field",
+      "category": "contact",
+      "severity": "medium",
+      "strategy": "mask"
+    },
+    "personal_phone": {
+      "name": "personal_phone_field",
+      "category": "contact",
+      "severity": "medium",
+      "strategy": "mask"
+    },
+    "emergency_contact": {
+      "name": "emergency_contact_field",
+      "category": "employee_sensitive",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "bank_account": {
+      "name": "bank_account_field",
+      "category": "financial",
+      "severity": "critical",
+      "strategy": "mask"
+    },
+    "routing_number": {
+      "name": "routing_number_field",
+      "category": "financial",
+      "severity": "high",
+      "strategy": "mask"
+    },
+    "credit_card": {
+      "name": "credit_card_field",
+      "category": "financial",
+      "severity": "critical",
+      "strategy": "mask"
+    },
+    "salary": {
+      "name": "salary_field",
+      "category": "employment_financial",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "compensation": {
+      "name": "compensation_field",
+      "category": "employment_financial",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "bonus": {
+      "name": "bonus_field",
+      "category": "employment_financial",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "equity": {
+      "name": "equity_field",
+      "category": "employment_financial",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "medical_notes": {
+      "name": "medical_notes_field",
+      "category": "health",
+      "severity": "critical",
+      "strategy": "redact"
+    },
+    "health_information": {
+      "name": "health_information_field",
+      "category": "health",
+      "severity": "critical",
+      "strategy": "redact"
+    },
+    "disability_status": {
+      "name": "disability_status_field",
+      "category": "protected_attribute",
+      "severity": "critical",
+      "strategy": "redact"
+    },
+    "race": {
+      "name": "race_field",
+      "category": "protected_attribute",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "ethnicity": {
+      "name": "ethnicity_field",
+      "category": "protected_attribute",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "religion": {
+      "name": "religion_field",
+      "category": "protected_attribute",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "sexual_orientation": {
+      "name": "sexual_orientation_field",
+      "category": "protected_attribute",
+      "severity": "critical",
+      "strategy": "redact"
+    },
+    "union_membership": {
+      "name": "union_membership_field",
+      "category": "protected_attribute",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "background_check_notes": {
+      "name": "background_check_field",
+      "category": "employee_sensitive",
+      "severity": "critical",
+      "strategy": "redact"
+    },
+    "performance_review": {
+      "name": "performance_review_field",
+      "category": "employee_sensitive",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "termination_reason": {
+      "name": "termination_reason_field",
+      "category": "employee_sensitive",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "visa_status": {
+      "name": "visa_status_field",
+      "category": "employee_sensitive",
+      "severity": "high",
+      "strategy": "redact"
+    },
+    "password": {
+      "name": "password_field",
+      "category": "credential",
+      "severity": "critical",
+      "strategy": "block"
+    },
+    "api_key": {
+      "name": "api_key_field",
+      "category": "credential",
+      "severity": "critical",
+      "strategy": "block"
+    },
+    "access_token": {
+      "name": "access_token_field",
+      "category": "credential",
+      "severity": "critical",
+      "strategy": "block"
+    }
+  },
+  "patterns": [
+    {
+      "name": "email",
+      "category": "contact",
+      "severity": "medium",
+      "regex": "(?<![\\w.+-])[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,63}(?![\\w.-])",
+      "flags": [
+        "IGNORECASE"
+      ],
+      "strategy": "mask"
+    },
+    {
+      "name": "phone",
+      "category": "contact",
+      "severity": "medium",
+      "regex": "(?<!\\w)(?:\\+?\\d{1,3}[ .-]?)?(?:\\(\\d{2,4}\\)[ .-]?)?\\d{3,4}[ .-]\\d{4}(?!\\w)",
+      "strategy": "mask"
+    },
+    {
+      "name": "us_ssn",
+      "category": "government_id",
+      "severity": "critical",
+      "regex": "(?<!\\d)(?!000|666|9\\d{2})\\d{3}-?\\d{2}-?\\d{4}(?!\\d)",
+      "strategy": "redact"
+    },
+    {
+      "name": "credit_card",
+      "category": "financial",
+      "severity": "critical",
+      "regex": "(?<!\\d)(?:\\d[ -]?){13,19}(?!\\d)",
+      "validator": "luhn",
+      "strategy": "mask"
+    },
+    {
+      "name": "cvv_labeled",
+      "category": "financial",
+      "severity": "critical",
+      "regex": "(?i)(?:cvv|cvc|security[ _-]?code)\\s*[:=]\\s*(\\d{3,4})(?!\\d)",
+      "capture_group": 1,
+      "strategy": "redact"
+    },
+    {
+      "name": "iban",
+      "category": "financial",
+      "severity": "critical",
+      "regex": "(?<![A-Z0-9])[A-Z]{2}\\d{2}(?: ?[A-Z0-9]){11,30}(?![A-Z0-9])",
+      "flags": [
+        "IGNORECASE"
+      ],
+      "validator": "iban",
+      "strategy": "mask"
+    },
+    {
+      "name": "us_routing_number",
+      "category": "financial",
+      "severity": "high",
+      "regex": "(?i)(?:routing|aba)(?:[ _-]?(?:number|no\\.?))?\\s*[:#=-]?\\s*(\\d{9})(?!\\d)",
+      "validator": "aba_routing",
+      "capture_group": 1,
+      "strategy": "mask"
+    },
+    {
+      "name": "bank_account",
+      "category": "financial",
+      "severity": "critical",
+      "regex": "(?i)(?:bank[ _-]?account|account|acct|a/c)(?:[ _-]?(?:number|no\\.?))?\\s*[:#=-]?\\s*([0-9]{6,18})(?!\\d)",
+      "capture_group": 1,
+      "strategy": "mask"
+    },
+    {
+      "name": "swift_bic",
+      "category": "financial",
+      "severity": "high",
+      "regex": "(?i)(?:swift|bic)(?:[ _-]?(?:code|id))?\\s*[:#=-]?\\s*([A-Z]{4}[A-Z]{2}[A-Z0-9]{2}(?:[A-Z0-9]{3})?)",
+      "capture_group": 1,
+      "strategy": "mask"
+    },
+    {
+      "name": "us_ein",
+      "category": "tax_identifier",
+      "severity": "high",
+      "regex": "(?i)(?:ein|employer[ _-]?identification[ _-]?number)\\s*[:#=-]?\\s*(\\d{2}-?\\d{7})(?!\\d)",
+      "validator": "ein",
+      "capture_group": 1,
+      "strategy": "redact"
+    },
+    {
+      "name": "employee_id",
+      "category": "employee_identifier",
+      "severity": "high",
+      "regex": "(?i)(?:employee|emp|worker|personnel)[ _-]?(?:id|number|no\\.?)\\s*[:#=-]?\\s*([A-Z]{0,5}[-_]?(?:\\d{5,12}|[A-Z0-9]{6,16}))",
+      "capture_group": 1,
+      "strategy": "hash"
+    },
+    {
+      "name": "contractor_id",
+      "category": "employee_identifier",
+      "severity": "high",
+      "regex": "(?i)(?:contractor|contingent[ _-]?worker|vendor)[ _-]?(?:id|number|no\\.?)\\s*[:#=-]?\\s*([A-Z]{0,5}[-_]?(?:\\d{5,12}|[A-Z0-9]{6,16}))",
+      "capture_group": 1,
+      "strategy": "hash"
+    },
+    {
+      "name": "payroll_id",
+      "category": "employment_financial",
+      "severity": "critical",
+      "regex": "(?i)(?:payroll[ _-]?id|payroll)\\s*(?:id|number|no\\.)?\\s*[:#=-]?\\s*([A-Z0-9_-]{6,24})",
+      "capture_group": 1,
+      "strategy": "redact"
+    },
+    {
+      "name": "compensation_value",
+      "category": "employment_financial",
+      "severity": "high",
+      "regex": "(?i)(?:salary|base[ _-]?pay|compensation|bonus|commission|equity|stock[ _-]?grant)\\s*[:=]?\\s*([$€£]\\s?\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?|\\d{2,3}(?:,\\d{3})+(?:\\.\\d{2})?)(?:\\s*(?:usd|eur|gbp|inr))?",
+      "strategy": "redact"
+    },
+    {
+      "name": "date_of_birth_labeled",
+      "category": "identity",
+      "severity": "high",
+      "regex": "(?i)(?:dob|date[ _-]?of[ _-]?birth|birth[ _-]?date)\\s*[:=]?\\s*((?:19|20)\\d{2}[-/.](?:0[1-9]|1[0-2])[-/.](?:0[1-9]|[12]\\d|3[01]))",
+      "capture_group": 1,
+      "strategy": "redact"
+    },
+    {
+      "name": "passport_number_labeled",
+      "category": "government_id",
+      "severity": "high",
+      "regex": "(?i)(?:passport(?:[ _-]?(?:number|no\\.?|id))?)\\s*[:#=-]?\\s*([A-Z0-9]{6,12})",
+      "capture_group": 1,
+      "strategy": "redact"
+    },
+    {
+      "name": "driver_license_labeled",
+      "category": "government_id",
+      "severity": "high",
+      "regex": "(?i)(?:driver[' ]?s?[ _-]?(?:license|licence)|dl)(?:[ _-]?(?:number|no\\.?|id))?\\s*[:#=-]?\\s*([A-Z0-9-]{5,20})",
+      "capture_group": 1,
+      "strategy": "redact"
+    },
+    {
+      "name": "home_address_labeled",
+      "category": "location",
+      "severity": "high",
+      "regex": "(?i)(?:home|residential|mailing)[ _-]?address\\s*[:=]\\s*([^\\n;]{8,180})",
+      "capture_group": 1,
+      "strategy": "redact"
+    },
+    {
+      "name": "postal_code_labeled",
+      "category": "location",
+      "severity": "medium",
+      "regex": "(?i)(?:zip|zip[ _-]?code|postal[ _-]?code)\\s*[:#=-]?\\s*([A-Z0-9][A-Z0-9 -]{2,11})",
+      "capture_group": 1,
+      "strategy": "mask"
+    },
+    {
+      "name": "emergency_contact_labeled",
+      "category": "employee_sensitive",
+      "severity": "high",
+      "regex": "(?i)(?:emergency[ _-]?contact|next[ _-]?of[ _-]?kin)\\s*[:=]\\s*([^\\n;]{2,180})",
+      "capture_group": 1,
+      "strategy": "redact"
+    },
+    {
+      "name": "crm_record_id",
+      "category": "crm_identifier",
+      "severity": "medium",
+      "regex": "(?i)(?:lead|contact|account|opportunity|case|candidate)[ _-]?(?:id|number|no\\.?)\\s*[:#=-]?\\s*([A-Z0-9_-]{6,32})",
+      "capture_group": 1,
+      "strategy": "hash"
+    },
+    {
+      "name": "linkedin_url",
+      "category": "professional_profile",
+      "severity": "medium",
+      "regex": "(?i)https?://(?:[a-z]{2,3}\\.)?linkedin\\.com/in/[A-Z0-9_-]{3,100}/?",
+      "strategy": "redact"
+    },
+    {
+      "name": "github_profile",
+      "category": "professional_profile",
+      "severity": "medium",
+      "regex": "(?i)https?://(?:www\\.)?github\\.com/[A-Z0-9-]{1,39}/?",
+      "strategy": "redact"
+    },
+    {
+      "name": "jwt",
+      "category": "credential",
+      "severity": "critical",
+      "regex": "(?<![A-Za-z0-9_-])eyJ[A-Za-z0-9_-]{5,}\\.[A-Za-z0-9_-]{5,}\\.[A-Za-z0-9_-]{5,}(?![A-Za-z0-9_-])",
+      "strategy": "block"
+    },
+    {
+      "name": "api_key_or_bearer_token",
+      "category": "credential",
+      "severity": "critical",
+      "regex": "(?i)(?:bearer|token|api[_-]?key|secret[_-]?key|client[_-]?secret)\\s*[:=]\\s*['\\\"]?([A-Za-z0-9_~+/.=-]{16,})",
+      "capture_group": 1,
+      "strategy": "block"
+    },
+    {
+      "name": "password_assignment",
+      "category": "credential",
+      "severity": "critical",
+      "regex": "(?i)(?:password|passwd|pwd)\\s*[:=]\\s*([^\\s,;]{4,})",
+      "capture_group": 1,
+      "strategy": "block"
+    },
+    {
+      "name": "private_key",
+      "category": "credential",
+      "severity": "critical",
+      "regex": "-----BEGIN(?: [A-Z]+)? PRIVATE KEY-----[\\s\\S]{1,20000}?-----END(?: [A-Z]+)? PRIVATE KEY-----",
+      "strategy": "block"
+    },
+    {
+      "name": "ipv4",
+      "category": "network_identifier",
+      "severity": "low",
+      "regex": "(?<![0-9.])(?:25[0-5]|2[0-4]\\d|1?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|1?\\d?\\d)){3}(?![0-9.])",
+      "strategy": "redact"
+    },
+    {
+      "name": "ipv6",
+      "category": "network_identifier",
+      "severity": "low",
+      "regex": "(?i)(?<![A-F0-9:])(?:[A-F0-9]{1,4}:){2,7}[A-F0-9]{0,4}(?![A-F0-9:])",
+      "strategy": "redact"
+    },
+    {
+      "name": "mac_address",
+      "category": "network_identifier",
+      "severity": "low",
+      "regex": "(?<![0-9A-Fa-f])(?:[0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}(?![0-9A-Fa-f])",
+      "strategy": "redact"
+    }
+  ]
+}

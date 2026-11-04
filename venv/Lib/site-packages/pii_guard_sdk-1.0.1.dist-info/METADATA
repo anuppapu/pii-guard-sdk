@@ -1,0 +1,26 @@
+Metadata-Version: 2.4
+Name: pii-guard-sdk
+Version: 1.0.1
+Summary: Configurable PII detection, masking, HMAC hashing, redaction, blocking, and CRM record sanitization
+Author: Your Organization
+License: MIT
+Project-URL: Homepage, https://example.invalid/pii-guard-sdk
+Project-URL: Repository, https://example.invalid/pii-guard-sdk
+Project-URL: Issues, https://example.invalid/pii-guard-sdk/issues
+Keywords: pii,privacy,data-protection,redaction,masking,hashing,security,crm
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Security
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+Requires-Dist: build>=1.2; extra == "dev"
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: ruff>=0.6; extra == "dev"

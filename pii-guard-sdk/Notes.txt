@@ -1,0 +1,24 @@
+python -m venv venv
+Activate venv ---  venv\scripts\activate
+python -m pip install --upgrade pip
+cd pii-guard-sdk --    python -m pip install -e ".[dev]"
+python -m pip install  --upgrade build
+
+Build the SDK
+python -m build - This will create dist\pii_guard_sdk-1.0.1-py3-none-any.whl
+
+python -m pip install dist\pii_guard_sdk-1.0.1-py3-none-any.whl
+
+check 
+python -c "from pii_guard import PIIGuard; print('pii-guard-sdk) import successed')"
+
+
+pip install fastapi uvicorn
+
+# For UI
+vicorn app:app --reload --host 127.0.0.1 --port 8000 ----- Backend
+python -m http.server 5500  ---- Frontend
+
+Component	URL	Purpose
+Python FastAPI backend	http://127.0.0.1:8000	Processes PII detection and sanitization
+HTML/CSS/JS frontend	http://127.0.0.1:5500/pii-guard-ui.html	Displays the UI and sends requests to the backend
